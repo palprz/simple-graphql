@@ -1,0 +1,17 @@
+type Query {
+  personById(id: ID): Person
+  personByName(name: String): Person
+}
+
+type Person{
+    id: ID
+    name: String
+    surname: String
+    country: Country
+}
+
+type Country{
+    id: ID
+    name: String
+    continent: String
+}

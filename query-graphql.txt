@@ -1,0 +1,19 @@
+{
+    personById(id: "1"){
+        id
+        name
+        surname
+        country {
+            name
+        }
+    }
+
+    personByName(name: "Bob"){
+        id
+        name
+        country {
+            name
+            continent
+        }
+    }
+}
