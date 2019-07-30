@@ -1,19 +1,35 @@
+# List with some examples of requests for GraphQL.
+# All examples contain alias with the description of the checking functionality of GraphQL
 {
-    personById(id: "1"){
-        id
-        name
+    # Simple find by ID
+    simpleFindByID: personById(id: "1"){
+        firstname
         surname
         country {
             name
         }
     }
 
-    personByName(name: "Bob"){
-        id
-        name
+    # Simple find by a different field than ID
+    simpleFindByDifferentFieldThanId: personBySurname(surname: "Dylan"){
+        firstname
+        surname
         country {
             name
             continent
         }
     }
+
+    # Example of fragment (to avoid providing everytime the same list of fields to the request)
+    exampleWithAliasAndFragmentLeft: personById(id: "1") {
+        ...personFields
+    }
+    exampleWithAliasAndFragmentRight: personById(id: "2") {
+        ...personFields
+    }
+
+}
+
+fragment personFields on Person {
+    surname
 }

@@ -26,7 +26,10 @@ public class SimpleGraphQL {
         ExecutionResult executionResult = build.execute(query);
 
         // Display results
-        System.out.println(executionResult.getData().toString());
+        System.out.println("Schema: " + schema + "\n");
+        System.out.println("Query: " + query + "\n");
+        System.out.println("Response: " + executionResult.toString() + "\n");
+        System.out.println("Results: " + executionResult.getData().toString() + "\n");
     }
 
     private static GraphQLSchema buildSchema(String schema) {
@@ -34,12 +37,17 @@ public class SimpleGraphQL {
         return new SchemaGenerator().makeExecutableSchema(new SchemaParser().parse(schema), runtimeWiring);
     }
 
+    /**
+     * Implement data fetchers for specific fields. Rest fields are using <code>PropertyDataFetcher</code>,
+     * because there is no naming mismatch, so we don't need to provide them.
+     * @return RuntimeWiring with provided data
+     */
     private static RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
                         .dataFetcher("personById", Data.getPersonByIdDataFetcher()))
                 .type(newTypeWiring("Query")
-                        .dataFetcher("personByName", Data.getPersonByNameDataFetcher()))
+                        .dataFetcher("personBySurname", Data.getPersonBySurnameDataFetcher()))
                 .type(newTypeWiring("Person")
                         .dataFetcher("country", Data.getCountryDataFetcher()))
                 .build();
@@ -48,7 +56,8 @@ public class SimpleGraphQL {
     private static String readFile(String fileName) throws IOException {
         StringBuilder sb = new StringBuilder();
         Stream<String> lines = Files.lines(Paths.get(fileName));
-        lines.forEach(line -> sb.append(line));
+        // Ignore comments in the file
+        lines.filter(line -> !line.contains("#")).forEach(line -> sb.append(line));
         lines.close();
 
         return sb.toString();

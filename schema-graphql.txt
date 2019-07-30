@@ -1,17 +1,19 @@
+# String! -> non-nullable value (promise from GraphQL)
+# [String] -> array with String objects
+
 type Query {
-  personById(id: ID): Person
-  personByName(name: String): Person
+    personById(id: ID): Person
+    personBySurname(surname: String): Person
 }
 
 type Person{
-    id: ID
-    name: String
-    surname: String
+    id: ID!
+    firstname: String!
+    surname: String!
     country: Country
 }
 
 type Country{
-    id: ID
-    name: String
-    continent: String
+    name: String!
+    continent: String!
 }
