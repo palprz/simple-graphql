@@ -1,52 +1,39 @@
 import graphql.schema.DataFetcher;
+import type.Country;
+import type.Person;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Data {
 
-    private static Map<String, String> PERSON1 = new HashMap<String, String>() {{
-        put("id", "1");
-        put("firstname", "Adam");
-        put("surname", "Smith");
-        put("country", "UK");
-    }};
+    private static Country COUNTRY1;
+    private static Country COUNTRY2;
 
-    private static Map<String, String> PERSON2 = new HashMap<String, String>() {{
-        put("id", "2");
-        put("firstname", "Bob");
-        put("surname", "Dylan");
-        put("country", "USA");
-    }};
+    private static Person PERSON1;
+    private static Person PERSON2;
+    private static Person PERSON3;
 
-    private static Map<String, String> PERSON3 = new HashMap<String, String>() {{
-        put("id", "3");
-        put("firstname", "Camila");
-        put("surname", "Camilovsky");
-        put("country", "USA");
-    }};
+    private static List<Person> PERSONS;
+    private static List<Country> COUNTRIES;
 
-    private static Map<String, String> COUNTRY1 = new HashMap<String, String>() {{
-        put("name", "UK");
-        put("continent", "Europe");
-    }};
+    static {
+        COUNTRY1 = new Country("UK", "Europe");
+        COUNTRY2 = new Country("USA", "North America");
 
-    private static Map<String, String> COUNTRY2 = new HashMap<String, String>() {{
-        put("name", "USA");
-        put("continent", "North America");
-    }};
+        PERSON1 = new Person("1", "Adam", "Smith", COUNTRY1);
+        PERSON2 = new Person("2", "Bob", "Dylan", COUNTRY2);
+        PERSON3 = new Person("3", "Camila", "Camilovsky", COUNTRY2);
 
-    private static List<Map<String, String>> PERSONS = Arrays.asList(PERSON1, PERSON2, PERSON3 );
-    private static List<Map<String, String>> COUNTRIES = Arrays.asList(COUNTRY1, COUNTRY2 );
+        COUNTRIES = Arrays.asList(COUNTRY1, COUNTRY2);
+        PERSONS = Arrays.asList(PERSON1, PERSON2, PERSON3);
+    }
 
     public static DataFetcher getPersonByIdDataFetcher() {
         return dataFetchingEnvironment -> {
             String personId = dataFetchingEnvironment.getArgument("id");
             return PERSONS
                     .stream()
-                    .filter(person -> person.get("id").equals(personId))
+                    .filter(person -> person.getId().equals(personId))
                     .findFirst()
                     .orElse(null);
         };
@@ -57,7 +44,7 @@ public class Data {
             String personSurname = dataFetchingEnvironment.getArgument("surname");
             return PERSONS
                     .stream()
-                    .filter(person -> person.get("surname").equals(personSurname))
+                    .filter(person -> person.getSurname().equals(personSurname))
                     .findFirst()
                     .orElse(null);
         };
@@ -65,14 +52,15 @@ public class Data {
 
     public static DataFetcher getCountryDataFetcher() {
         return dataFetchingEnvironment -> {
-            Map<String,String> person = dataFetchingEnvironment.getSource();
-            String countryName = person.get("country");
+            Person person = dataFetchingEnvironment.getSource();
+            Country countryName = person.getCountry();
             return COUNTRIES
                     .stream()
-                    .filter(country -> country.get("name").equals(countryName))
+                    .filter(country -> country.getName().equals(countryName.getName()))
                     .findFirst()
                     .orElse(null);
         };
     }
+
 
 }
