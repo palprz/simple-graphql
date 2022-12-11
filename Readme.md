@@ -1,4 +1,4 @@
-# Simple GraphQL [July 2019]
+# Simple GraphQL
 
 Application to show some examples of running queries with using GraphQL with using wiring data (no additional database).
 
